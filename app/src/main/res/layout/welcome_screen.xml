@@ -7,13 +7,13 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="455dp"
-        android:layout_height="834dp"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/welcome_screen_background" />
+        android:background="@drawable/welcome_screen_background" />
 
     <Button
         android:id="@+id/button"
@@ -34,7 +34,7 @@
         android:id="@+id/textView"
         android:layout_width="396dp"
         android:layout_height="110dp"
-        android:layout_marginTop="260dp"
+        android:layout_marginTop="240dp"
         android:elevation="20dp"
         android:fontFamily="@font/roboto"
         android:shadowColor="#7F000000"
@@ -57,7 +57,7 @@
         android:gravity="center"
         android:text="Tap, connect, and discover the chosen one. Enjoy the thrill of surprise and share the joy with your friends.  Let the colorful journey unfold "
         android:textColor="#ECECEC"
-        android:textSize="17sp"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
