@@ -12,8 +12,10 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@drawable/main_screen_background"
-        tools:layout_editor_absoluteX="-3dp"
-        tools:layout_editor_absoluteY="-3dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button1"
