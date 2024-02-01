@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
                     R.anim.slide_out
                 )
                 .replace(R.id.place_holder, SettingsScreenFragment())
+                .addToBackStack(null)
                 .commit()
         }
 

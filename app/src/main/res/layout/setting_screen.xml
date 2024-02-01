@@ -99,8 +99,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.178" />
 
-    <ImageButton
-        android:id="@+id/crossImageView"
+    <ImageView
+        android:id="@+id/settings_cross"
         android:layout_width="45dp"
         android:layout_height="40dp"
         android:layout_alignParentTop="true"
@@ -108,9 +108,9 @@
         android:src="@drawable/cross"
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.956"
+        app:layout_constraintHorizontal_bias="0.926"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.023" />
+        app:layout_constraintVertical_bias="0.044" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
