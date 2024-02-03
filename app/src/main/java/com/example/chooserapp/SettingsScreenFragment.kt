@@ -1,5 +1,7 @@
 package com.example.chooserapp
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,8 +14,10 @@ import android.widget.ImageButton
 import android.widget.ImageView
 
 class SettingsScreenFragment : Fragment() {
+    // Здесь создаем две переменных которые наследуют от классов саундменеджер и чекбокс
     private lateinit var soundManager: SoundManager
     private lateinit var soundCheckBox: CheckBox
+    private lateinit var musicCheckBox: CheckBox
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -21,8 +25,10 @@ class SettingsScreenFragment : Fragment() {
         val view = inflater.inflate(R.layout.setting_screen, container, false)
 
         soundManager = SoundManager(requireContext()) // Инициализация SoundManager
-        soundCheckBox = view.findViewById(R.id.checkBox_2)
-        soundCheckBox.isChecked = soundManager.isSoundEnabled()
+        soundCheckBox = view.findViewById(R.id.checkBox_2) // Обработка sound чекбокса
+        soundCheckBox.isChecked = soundManager.isSoundEnabled() // Обработка состояния включения sound
+        musicCheckBox = view.findViewById(R.id.checkBox_1) // Обработка music чекбокса
+        musicCheckBox.isChecked = soundManager.isMusicEnabled() // Обработка состояния включения music
 
         soundCheckBox?.setOnCheckedChangeListener { _, isChecked ->
             Log.d("CheckBox", "isChecked: $isChecked") // Debug output
@@ -32,6 +38,20 @@ class SettingsScreenFragment : Fragment() {
             } else {
                 Log.d("CheckBox", "Sound disabled") // Debug output
                 soundManager.disableSound()
+            }
+        }
+
+        // Обработка чекбокса для музыки
+        // Предположим, что у вас есть методы enableMusic и disableMusic в вашем SoundManager
+        musicCheckBox.isChecked = soundManager.isMusicEnabled()
+        musicCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            Log.d("CheckBox", "isChecked: $isChecked")
+            if (isChecked) {
+                Log.d("CheckBox", "Music enabled")
+                soundManager.enableMusic()
+            } else {
+                Log.d("CheckBox", "Music disabled")
+                soundManager.disableMusic()
             }
         }
 

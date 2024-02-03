@@ -1,6 +1,7 @@
 package com.example.chooserapp
 
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.preference.PreferenceManager
 import androidx.activity.enableEdgeToEdge
@@ -15,11 +16,16 @@ import android.widget.ImageView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bindingClass: ActivityMainBinding
+    private lateinit var mediaPlayer: MediaPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindingClass = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bindingClass.root)
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.background_music)
+        mediaPlayer.isLooping = true
+        mediaPlayer.start()
 
         // TODO: Rewrite this function in a fragment + add a function that checks if a user completed
         // TODO: a welcome screen stuff. ALSO IN TESTING !!
@@ -60,6 +66,10 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
 
+    }
+    override fun onDestroy() {
+        mediaPlayer.release()
+        super.onDestroy()
     }
 }
 //TODO: THIS FUNCTION IS IN TESTING DO NOT UNCOMMENT (checker for firstTimeLaunch
