@@ -1,6 +1,7 @@
 package com.example.chooserapp
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.preference.PreferenceManager
 import androidx.activity.enableEdgeToEdge
@@ -30,9 +31,11 @@ class MainActivity : AppCompatActivity() {
 //                .commit()
 //        }
 
+        // Начало игры
         val playButton : Button = findViewById(R.id.playButton)
         playButton.setOnClickListener{}
 
+        // Открытие настроек во фрагменте + анимации
         val settingsButton : Button = findViewById(R.id.settingsButton)
         settingsButton.setOnClickListener{
             supportFragmentManager.beginTransaction()
@@ -47,7 +50,14 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
 
+        // Открытие гайда для новичков
         val guideButton : Button = findViewById(R.id.guideButton)
+        // Через активити:
+//        guideButton.setOnClickListener{
+//            val intent = Intent(this, GuideActivity::class.java)
+//            startActivity(intent)
+
+        // Открытие гайда через фрагмент:
         guideButton.setOnClickListener{
             supportFragmentManager.beginTransaction()
                 .setCustomAnimations(
@@ -57,8 +67,10 @@ class MainActivity : AppCompatActivity() {
                     R.anim.slide_out
                 )
                 .replace(R.id.place_holder, GuideScreenFragment())
+                .addToBackStack(null)
                 .commit()
         }
+//        }
 
     }
 }

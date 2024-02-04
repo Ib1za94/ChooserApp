@@ -1,6 +1,8 @@
 package com.example.chooserapp
 
 import android.os.Bundle
+import android.transition.Fade
+import android.transition.Slide
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +22,12 @@ class SettingsScreenFragment : Fragment() {
         closeButton?.setOnClickListener {
             // Закрываем текущий фрагмент
             requireActivity().supportFragmentManager.beginTransaction()
+                .setCustomAnimations(
+                    R.anim.slide_in,
+                    R.anim.fade_out,
+                    R.anim.fade_in,
+                    R.anim.slide_out
+                )
                 .remove(this@SettingsScreenFragment)
                 .commit()
 
