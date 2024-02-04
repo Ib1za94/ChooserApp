@@ -16,10 +16,10 @@ import android.widget.ImageButton
 import android.widget.ImageView
 
 class SettingsScreenFragment : Fragment() {
-    // Здесь создаем две переменных которые наследуют от классов саундменеджер и чекбокс
     private lateinit var soundManager: SoundManager
     private lateinit var soundCheckBox: CheckBox
     private lateinit var musicCheckBox: CheckBox
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,6 +29,7 @@ class SettingsScreenFragment : Fragment() {
         soundManager = SoundManager(requireContext()) // Инициализация SoundManager
         soundCheckBox = view.findViewById(R.id.checkBox_2) // Обработка sound чекбокса
         soundCheckBox.isChecked = soundManager.isSoundEnabled() // Обработка состояния включения sound
+
         musicCheckBox = view.findViewById(R.id.checkBox_1) // Обработка music чекбокса
         musicCheckBox.isChecked = soundManager.isMusicEnabled() // Обработка состояния включения music
 
