@@ -14,6 +14,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Toast
 
 class SettingsScreenFragment : Fragment() {
 
@@ -43,9 +44,11 @@ class SettingsScreenFragment : Fragment() {
             if (isChecked) {
                 Log.d("CheckBox", "Sound enabled") // Debug output
                 soundManager.enableSound()
+                Toast.makeText(context, "Sound is On", Toast.LENGTH_LONG).show()
             } else {
                 Log.d("CheckBox", "Sound disabled") // Debug output
                 soundManager.disableSound()
+                Toast.makeText(context, "Sound is Off", Toast.LENGTH_LONG).show()
             }
         }
 
@@ -59,12 +62,14 @@ class SettingsScreenFragment : Fragment() {
                 soundManager.enableMusic()
                 if (!mediaPlayerSet.isPlaying) {
                     mediaPlayerSet.start()
+                    Toast.makeText(context, "Music is On", Toast.LENGTH_LONG).show()
                 }
             } else {
                 Log.d("CheckBox", "Music disabled")
                 soundManager.disableMusic()
                 if (mediaPlayerSet.isPlaying) {
                     mediaPlayerSet.pause()
+                    Toast.makeText(context, "Music is Off", Toast.LENGTH_LONG).show()
                 }
             }
         }
