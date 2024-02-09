@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.FragmentActivity
+import androidx.transition.Fade
+import androidx.transition.Slide
 import androidx.viewpager2.widget.ViewPager2
 import me.relex.circleindicator.CircleIndicator3
 
@@ -56,7 +58,24 @@ class GuideScreenFragment : Fragment() {
                 .commit()
 
             // Возвращаемся на главный экран (MainActivity)
-            requireActivity().supportFragmentManager.popBackStack()
+//            requireActivity().supportFragmentManager.popBackStack()
+
+            // Закрываем WelcomeScreenFragment через тег
+            val welcomeFragment = requireActivity().supportFragmentManager.findFragmentByTag("WelcomeScreenFragment")
+            // ?.let проверяет сперва на null "?" а let == запускает часть кода только если фрагмент non null
+            welcomeFragment?.let {
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(
+                        R.anim.slide_in,
+                        R.anim.fade_out,
+                        R.anim.fade_in,
+                        R.anim.slide_out
+                    )
+                    .remove(it)
+                    .commit()
+            }
+
+
         }
 
         return view

@@ -2,6 +2,7 @@ package com.example.chooserapp
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.media.AudioManager
 
 class SoundManager(private val context: Context) {
 
@@ -15,12 +16,12 @@ class SoundManager(private val context: Context) {
 
     fun enableSound() {
         preferences.edit().putBoolean(soundEnabledKey, true).apply()
-        // Включить звук, если это необходимо
+        setSystemSoundEnabled(true)
     }
 
     fun disableSound() {
         preferences.edit().putBoolean(soundEnabledKey, false).apply()
-        // Выключить звук, если это необходимо
+        setSystemSoundEnabled(false)
     }
 
     fun isMusicEnabled(): Boolean {
@@ -29,13 +30,15 @@ class SoundManager(private val context: Context) {
 
     fun enableMusic() {
         preferences.edit().putBoolean(musicEnabledKey, true).apply()
-        // Включить музыку, если это необходимо
-        // Тут могут быть дополнительные действия по включению музыки
     }
 
     fun disableMusic() {
         preferences.edit().putBoolean(musicEnabledKey, false).apply()
-        // Выключить музыку, если это необходимо
-        // Тут могут быть дополнительные действия по выключению музыки
+
+    }
+
+    private fun setSystemSoundEnabled(enabled: Boolean) {
+        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, if (enabled) AudioManager.ADJUST_UNMUTE else AudioManager.ADJUST_MUTE, 0)
     }
 }
