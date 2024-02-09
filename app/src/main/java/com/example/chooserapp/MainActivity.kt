@@ -1,6 +1,7 @@
 package com.example.chooserapp
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.preference.PreferenceManager
@@ -12,29 +13,34 @@ import com.example.chooserapp.databinding.ActivityMainBinding
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import com.example.chooserapp.SoundManager
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bindingClass: ActivityMainBinding
-    private lateinit var mediaPlayer: MediaPlayer
+    lateinit var mediaPlayer: MediaPlayer
+    private lateinit var soundManager: SoundManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindingClass = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bindingClass.root)
 
+        soundManager = SoundManager(this)
+
         mediaPlayer = MediaPlayer.create(this, R.raw.background_music)
         mediaPlayer.isLooping = true
         mediaPlayer.start()
 
-        // TODO: Rewrite this function in a fragment + add a function that checks if a user completed
-        // TODO: a welcome screen stuff. ALSO IN TESTING !!
-//        if (isFirstTimeLaunch(this)) {
-//            // Show the welcome screen fragment
-//            supportFragmentManager.beginTransaction()
-//                .replace(R.id.place_holder, WelcomeScreenFragment())
-//                .commit()
-//        }
+      // Проверка функцией запускается ли прила впервые, функция - в самом низу файла
+        if (isFirstTimeLaunch(this)) {
+            val welcomeTag = "WelcomeScreenFragment"
+            // Show the welcome screen fragment
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.place_holder, WelcomeScreenFragment(), welcomeTag)
+                .commit()
+        }
 
         val playButton : Button = findViewById(R.id.playButton)
         playButton.setOnClickListener{}
@@ -63,6 +69,7 @@ class MainActivity : AppCompatActivity() {
                     R.anim.slide_out
                 )
                 .replace(R.id.place_holder, GuideScreenFragment())
+                .addToBackStack(null)
                 .commit()
         }
 
@@ -71,17 +78,30 @@ class MainActivity : AppCompatActivity() {
         mediaPlayer.release()
         super.onDestroy()
     }
+// TODO: Работает!
+    override fun onPause() {
+        mediaPlayer.pause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        if (soundManager.isMusicEnabled() == true) {
+            mediaPlayer.start()
+        }
+
+        super.onResume()
+    }
 }
-//TODO: THIS FUNCTION IS IN TESTING DO NOT UNCOMMENT (checker for firstTimeLaunch
-//fun isFirstTimeLaunch(context: Context): Boolean {
-//    val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-//    val isFirstTime = sharedPreferences.getBoolean("is_first_time", true)
-//
-//    if (isFirstTime) {
-//        // Set the flag to false after the first launch
-//        sharedPreferences.edit().putBoolean("is_first_time", false).apply()
-//    }
-//
-//    return isFirstTime
-//}
-//
+//TODO: Добавить эту функцию кнопке "Get Started" а не просто при первом запуске.
+fun isFirstTimeLaunch(context: Context): Boolean {
+    val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    val isFirstTime = sharedPreferences.getBoolean("is_first_time", true)
+
+    if (isFirstTime) {
+        // Set the flag to false after the first launch
+        sharedPreferences.edit().putBoolean("is_first_time", false).apply()
+    }
+
+    return isFirstTime
+}
+
