@@ -34,6 +34,7 @@ class SoundManager(private val context: Context) {
 
     fun disableMusic() {
         preferences.edit().putBoolean(musicEnabledKey, false).apply()
+
     }
 
     private fun setSystemSoundEnabled(enabled: Boolean) {
