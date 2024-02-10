@@ -53,7 +53,7 @@ class SettingsScreenFragment : Fragment() {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
+                //почему-то без этой функции эррор выбивает, она просто как оболочка должна быть
             }
 
         }
