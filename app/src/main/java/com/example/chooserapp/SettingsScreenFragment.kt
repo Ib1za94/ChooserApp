@@ -1,5 +1,6 @@
 package com.example.chooserapp
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -10,10 +11,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 
 class SettingsScreenFragment : Fragment() {
@@ -21,12 +26,37 @@ class SettingsScreenFragment : Fragment() {
     private lateinit var soundManager: SoundManager
     private lateinit var soundCheckBox: CheckBox
     private lateinit var musicCheckBox: CheckBox
+    private lateinit var spinner: Spinner
+    private val sharedPreferencesKey = "selectedOption"
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.setting_screen, container, false)
+
+        spinner = view.findViewById(R.id.languageSpinner)
+
+        val savedOption = getSavedOption()
+        spinner.setSelection(savedOption)
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                // Сохранение выбранного значения при изменении
+                saveSelectedOption(position)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+        }
 
         // Создаем локальную переменную медиаплеера(который инициализирован в активити)
         // в нашем фрагменте.
@@ -92,6 +122,18 @@ class SettingsScreenFragment : Fragment() {
         }
         return view
     }
+    private fun getSavedOption(): Int {
+        val sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        return sharedPreferences.getInt(sharedPreferencesKey, 0) // 0 - значение по умолчанию
+    }
+
+    private fun saveSelectedOption(position: Int) {
+        val sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putInt(sharedPreferencesKey, position)
+        editor.apply()
+    }
+
 //  Сделал хуиту, дальше ебану кнопочки на music и sound, ну и попробую поставить код на смену языка
     companion object {
 
