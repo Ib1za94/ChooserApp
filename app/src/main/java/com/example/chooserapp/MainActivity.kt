@@ -27,6 +27,11 @@ class MainActivity : AppCompatActivity() {
         bindingClass = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bindingClass.root)
 
+        val buttonText = resources.getString(R.string.settings_button_text)
+        val yourButton = findViewById<Button>(R.id.settingsButton) // Замените R.id.yourButton на фактический идентификатор вашей кнопки
+        yourButton.text = buttonText
+        yourButton.isSingleLine = false
+
         soundManager = SoundManager(this)
 
         mediaPlayer = MediaPlayer.create(this, R.raw.background_music)

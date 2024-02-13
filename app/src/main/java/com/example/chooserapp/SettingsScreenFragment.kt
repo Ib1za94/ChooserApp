@@ -1,7 +1,10 @@
 package com.example.chooserapp
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.ColorStateList
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.transition.Fade
@@ -27,23 +30,14 @@ class SettingsScreenFragment : Fragment() {
     private lateinit var soundManager: SoundManager
     private lateinit var soundCheckBox: CheckBox
     private lateinit var musicCheckBox: CheckBox
-    private lateinit var spinnerManager: SpinnerManager
-    private lateinit var spinnerButton: Spinner
-
+    private lateinit var spinner: Spinner
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.setting_screen, container, false)
-
-        // Инициализация спиннера
-        spinnerButton = view.findViewById(R.id.languageSpinner)
-        spinnerManager = SpinnerManager(requireContext(), spinnerButton, "selectLanguage")
-
-        spinnerManager.setSpinnerItemSelectedListener { selectedLanguageCode ->
-            // Метод changeLanguage будет вызван при выборе языка в спиннере
-            spinnerManager.changeLanguage(requireContext(), selectedLanguageCode)
+        spinner = view.findViewById(R.id.languageSpinner)
 
         // Создаем локальную переменную медиаплеера(который инициализирован в активити)
         // в нашем фрагменте.
@@ -107,10 +101,85 @@ class SettingsScreenFragment : Fragment() {
             // Возвращаемся на главный экран (MainActivity)
             requireActivity().supportFragmentManager.popBackStack()
         }
+
         return view
     }
-//  Сделал хуиту, дальше ебану кнопочки на music и sound, ну и попробую поставить код на смену языка
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            languages
+        )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
+        spinner.setSelection(0)
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val selectedLang = parent?.getItemAtPosition(position).toString()
+                when (selectedLang) {
+                    "English" -> {
+                        setLocale(requireActivity(), LANG_ENGLISH)
+                        requireActivity().finish()
+                        startActivity(requireActivity().intent)
+                    }
+                    "Ukrainian" -> {
+                        setLocale(requireActivity(), LANG_UKRAINIAN)
+                        requireActivity().finish()
+                        startActivity(requireActivity().intent)
+                    }
+                    "Russian" -> {
+                        setLocale(requireActivity(), LANG_RUSSIAN)
+                        requireActivity().finish()
+                        startActivity(requireActivity().intent)
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
+    }
+
+    private fun setLocale(activity: Activity, langCode: String) {
+        try {
+        val locale = Locale(langCode)
+        Locale.setDefault(locale)
+        val resources: Resources = activity.resources
+        val configuration: Configuration = resources.configuration
+        configuration.setLocale(locale)
+        resources.updateConfiguration(configuration, resources.displayMetrics)
+
+        // Сохраняем выбранный язык в SharedPreferences
+            saveSelectedLanguage(langCode)
+        } catch (e: Exception) {
+            Log.e("Language", "Error setting locale: ${e.message}")
+        }
+    }
+    // TODO: Эта функция не работает, не сохраняет, нужно доработать
+    private fun saveSelectedLanguage(langCode: String) {
+        val sharedPreferences = requireActivity().getSharedPreferences("YOUR_PREFERENCES_NAME", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("language", langCode)
+        editor.apply()
+
+        Log.d("Language", "Saved language: $langCode")
+    }
+
+    // TODO:Сделать так, чтобы язык менялся не только во всех кнопках, но и внутри спиннера
     companion object {
+
+        private val LANG_ENGLISH = "en"
+        private val LANG_UKRAINIAN = "uk"
+        private val LANG_RUSSIAN = "ru"
+        private val languages = arrayOf("Select language", "English", "Ukrainian", "Russian")
 
         @JvmStatic
         fun newInstance() = SettingsScreenFragment()
