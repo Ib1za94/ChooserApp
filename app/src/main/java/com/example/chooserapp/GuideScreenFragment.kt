@@ -1,6 +1,7 @@
 package com.example.chooserapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -45,25 +46,10 @@ class GuideScreenFragment : Fragment() {
 
         //Онкликлистенер для кнопки скип
         val skipButton = view.findViewById<Button>(R.id.skipButton)
+        val backStackCount = requireActivity().supportFragmentManager.backStackEntryCount
         skipButton.setOnClickListener{
-            //Закрываем текущий фрагмент
-            requireActivity().supportFragmentManager.beginTransaction()
-                .setCustomAnimations(
-                    R.anim.slide_in,
-                    R.anim.fade_out,
-                    R.anim.fade_in,
-                    R.anim.slide_out
-                )
-                .remove(this@GuideScreenFragment)
-                .commit()
-
-            // Возвращаемся на главный экран (MainActivity)
-//            requireActivity().supportFragmentManager.popBackStack()
-
-            // Закрываем WelcomeScreenFragment через тег
-            val welcomeFragment = requireActivity().supportFragmentManager.findFragmentByTag("WelcomeScreenFragment")
-            // ?.let проверяет сперва на null "?" а let == запускает часть кода только если фрагмент non null
-            welcomeFragment?.let {
+            if (backStackCount == 1) {
+                //Закрываем текущий фрагмент
                 requireActivity().supportFragmentManager.beginTransaction()
                     .setCustomAnimations(
                         R.anim.slide_in,
@@ -71,10 +57,21 @@ class GuideScreenFragment : Fragment() {
                         R.anim.fade_in,
                         R.anim.slide_out
                     )
-                    .remove(it)
+                    .remove(this)
                     .commit()
             }
+                // Возвращаемся на главный экран (MainActivity)
+                requireActivity().supportFragmentManager.popBackStack()
 
+
+            val welcomeFragment = requireActivity().supportFragmentManager.findFragmentByTag("WelcomeScreenFragment")
+            if (welcomeFragment != null) {
+//                requireActivity().supportFragmentManager.beginTransaction()
+//                    .remove(welcomeFragment)
+//                    .commit()
+                Log.d("let close fragment", "Welcome closed")
+                requireActivity().supportFragmentManager.popBackStack()
+            }
 
         }
 

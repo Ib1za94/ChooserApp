@@ -2,8 +2,11 @@ package com.example.chooserapp
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.media.Image
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.preference.PreferenceManager
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +16,7 @@ import com.example.chooserapp.databinding.ActivityMainBinding
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
 import com.example.chooserapp.SoundManager
 
 
@@ -35,17 +39,50 @@ class MainActivity : AppCompatActivity() {
 
       // Проверка функцией запускается ли прила впервые, функция - в самом низу файла
         if (isFirstTimeLaunch(this)) {
-            val welcomeTag = "WelcomeScreenFragment"
+//            val welcomeTag = "WelcomeScreenFragment"
             // Show the welcome screen fragment
             supportFragmentManager.beginTransaction()
-                .replace(R.id.place_holder, WelcomeScreenFragment(), welcomeTag)
+                .replace(R.id.place_holder, WelcomeScreenFragment(), "WelcomeScreenFragment")
+                .addToBackStack("Welcome")
                 .commit()
         }
 
         val playButton : Button = findViewById(R.id.playButton)
+        val settingsButton : Button = findViewById(R.id.settingsButton)
+        val guideButton : Button = findViewById(R.id.guideButton)
+        val spinfluence : TextView = findViewById(R.id.textView3)
+
+        //TODO: Спрятать еще новый бекграунд если он будет сильно выбиваться
+        val imageBackground : ImageView = findViewById(R.id.imageView2)
+
+        // Функция которая прячет кнопки если фрагмент есть на экране(в стеке)
+        fun updateButtonVisibility() {
+            val isFragmentAdded = supportFragmentManager.backStackEntryCount != 0
+            if (isFragmentAdded) {
+                playButton.visibility = View.INVISIBLE
+                guideButton.visibility = View.INVISIBLE
+                settingsButton.visibility = View.INVISIBLE
+                spinfluence.visibility = View.INVISIBLE
+            }
+            else {
+                playButton.visibility = View.VISIBLE
+                guideButton.visibility = View.VISIBLE
+                settingsButton.visibility = View.VISIBLE
+                spinfluence.visibility = View.VISIBLE
+            }
+
+        }
+
+// Листенер бекстека, если бекстек 1+ то кнопки пропадают
+        supportFragmentManager.addOnBackStackChangedListener {
+            val backStackCount = supportFragmentManager.backStackEntryCount
+            Log.d("BackStackChangeListener", "Backstack count is $backStackCount")
+            updateButtonVisibility()
+        }
+
+
         playButton.setOnClickListener{}
 
-        val settingsButton : Button = findViewById(R.id.settingsButton)
         settingsButton.setOnClickListener{
             supportFragmentManager.beginTransaction()
                 .setCustomAnimations(
@@ -59,7 +96,6 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
 
-        val guideButton : Button = findViewById(R.id.guideButton)
         guideButton.setOnClickListener{
             supportFragmentManager.beginTransaction()
                 .setCustomAnimations(
