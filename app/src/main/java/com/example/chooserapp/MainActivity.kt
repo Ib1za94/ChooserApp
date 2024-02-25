@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
 import androidx.preference.PreferenceManager
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -37,6 +38,24 @@ class MainActivity : AppCompatActivity() {
         mediaPlayer = MediaPlayer.create(this, R.raw.background_music)
         mediaPlayer.isLooping = true
         mediaPlayer.start()
+
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val isMusicEnabled = sharedPreferences.getBoolean("isMusicEnabled", true)
+        // Проверка состояния Music CheckBox при запуске активности
+        if (!isMusicEnabled) {
+            Log.d("CheckBox", "Music disabled on app launch")
+            soundManager.disableMusic()
+            if (mediaPlayer.isPlaying) {
+                mediaPlayer.pause()
+            }
+        }
+        val isSoundEnabled = sharedPreferences.getBoolean("isSoundEnabled", true)
+        if (!isSoundEnabled) {
+            Log.d("CheckBox", "Sound disabled on app launch")
+            soundManager.disableSound()
+
+        }
+
 
       // Проверка функцией запускается ли прила впервые, функция - в самом низу файла
         if (isFirstTimeLaunch(this)) {

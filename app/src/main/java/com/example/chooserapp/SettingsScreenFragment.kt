@@ -2,6 +2,7 @@ package com.example.chooserapp
 
 import android.app.Activity
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -38,20 +39,35 @@ class SettingsScreenFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.setting_screen, container, false)
         spinner = view.findViewById(R.id.languageSpinner)
-
         // Создаем локальную переменную медиаплеера(который инициализирован в активити)
         // в нашем фрагменте.
         val mediaPlayerSet = (requireActivity() as MainActivity).mediaPlayer
 
         soundManager = SoundManager(requireContext()) // Инициализация SoundManager
+
         soundCheckBox = view.findViewById(R.id.checkBox_2) // Обработка sound чекбокса
-        soundCheckBox.isChecked = soundManager.isSoundEnabled() // Обработка состояния включения sound
 
         musicCheckBox = view.findViewById(R.id.checkBox_1) // Обработка music чекбокса
-        musicCheckBox.isChecked = soundManager.isMusicEnabled() // Обработка состояния включения music
+        if(musicCheckBox.isChecked) {
+            soundManager.isMusicEnabled()
+        } else {
+            soundManager.disableMusic()// Обработка состояния включения music
+        }
 
-        soundCheckBox?.setOnCheckedChangeListener { _, isChecked ->
+        val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+
+        val isMusicEnabled = sharedPreferences.getBoolean("isMusicEnabled", true)
+
+        val isSoundEnabled = sharedPreferences.getBoolean("isSoundEnabled", true)
+
+        soundCheckBox.isChecked = sharedPreferences.getBoolean("isCheckboxChecked", true)
+
+        soundCheckBox.isChecked = soundManager.isSoundEnabled()
+        soundCheckBox.setOnCheckedChangeListener { _, isChecked ->
             Log.d("CheckBox", "isChecked: $isChecked") // Debug output
+
+            sharedPreferences.edit().putBoolean("isSoundEnabled", isChecked).apply()
+
             if (isChecked) {
                 Log.d("CheckBox", "Sound enabled") // Debug output
                 soundManager.enableSound()
@@ -68,6 +84,9 @@ class SettingsScreenFragment : Fragment() {
         musicCheckBox.isChecked = soundManager.isMusicEnabled()
         musicCheckBox.setOnCheckedChangeListener { _, isChecked ->
             Log.d("CheckBox", "isChecked: $isChecked")
+
+            sharedPreferences.edit().putBoolean("isMusicEnabled", isChecked).apply()
+
             if (isChecked) {
                 Log.d("CheckBox", "Music enabled")
                 soundManager.enableMusic()
@@ -149,38 +168,21 @@ class SettingsScreenFragment : Fragment() {
     }
 
     private fun setLocale(activity: Activity, langCode: String) {
-        try {
-        val locale = Locale(langCode)
-        Locale.setDefault(locale)
-        val resources: Resources = activity.resources
-        val configuration: Configuration = resources.configuration
-        configuration.setLocale(locale)
-        resources.updateConfiguration(configuration, resources.displayMetrics)
-
-        // Сохраняем выбранный язык в SharedPreferences
-            saveSelectedLanguage(langCode)
-        } catch (e: Exception) {
-            Log.e("Language", "Error setting locale: ${e.message}")
-        }
-    }
-    // TODO: Эта функция не работает, не сохраняет, нужно доработать
-    private fun saveSelectedLanguage(langCode: String) {
-        val sharedPreferences = requireActivity().getSharedPreferences("YOUR_PREFERENCES_NAME", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putString("language", langCode)
-        editor.apply()
-
-        Log.d("Language", "Saved language: $langCode")
+            val locale = Locale(langCode)
+            Locale.setDefault(locale)
+            val resources: Resources = activity.resources
+            val configuration: Configuration = resources.configuration
+            configuration.setLocale(locale)
+            resources.updateConfiguration(configuration, resources.displayMetrics)
     }
 
     // TODO:Сделать так, чтобы язык менялся не только во всех кнопках, но и внутри спиннера
     companion object {
 
-        private val LANG_ENGLISH = "en"
-        private val LANG_UKRAINIAN = "uk"
-        private val LANG_RUSSIAN = "ru"
+        private const val LANG_ENGLISH = "en"
+        private const val LANG_UKRAINIAN = "uk"
+        private const val LANG_RUSSIAN = "ru"
         private val languages = arrayOf("Select language", "English", "Ukrainian", "Russian")
-
         @JvmStatic
         fun newInstance() = SettingsScreenFragment()
     }
