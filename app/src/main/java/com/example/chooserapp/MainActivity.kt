@@ -53,7 +53,6 @@ class MainActivity : AppCompatActivity() {
         if (!isSoundEnabled) {
             Log.d("CheckBox", "Sound disabled on app launch")
             soundManager.disableSound()
-
         }
 
 
