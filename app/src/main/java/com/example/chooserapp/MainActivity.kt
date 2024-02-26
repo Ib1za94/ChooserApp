@@ -14,6 +14,7 @@ import com.example.chooserapp.databinding.ActivityMainBinding
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import androidx.fragment.app.replace
 import com.example.chooserapp.SoundManager
 
 
@@ -66,7 +67,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         val playButton : Button = findViewById(R.id.playButton)
-        playButton.setOnClickListener{}
+        playButton.setOnClickListener{
+            supportFragmentManager.beginTransaction()
+                .setCustomAnimations(
+                    R.anim.slide_in,
+                    R.anim.fade_out,
+                    R.anim.fade_in,
+                    R.anim.slide_out
+                )
+                .replace(R.id.place_holder, PlayFragment())
+                .addToBackStack(null)
+                .commit()
+        }
 
         val settingsButton : Button = findViewById(R.id.settingsButton)
         settingsButton.setOnClickListener{
