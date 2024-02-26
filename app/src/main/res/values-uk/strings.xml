@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Spinfluence</string>
+    <string name="select_language">Оберiть мову</string>
+    <string name="settings_button_text">Налаштування</string>
+    <string name="guide_button_text">Гайд</string>
+    <string name="play_button_text">Грати</string>
+    <!-- Добавьте другие строки по мере необходимости -->
+</resources>

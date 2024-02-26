@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="select_language">Выберите язык</string>
+    <string name="settings_button_text">Настройки</string>
+    <string name="guide_button_text">Гайд</string>
+    <string name="play_button_text">Играть</string>
+    <string name="app_name">Spinfluence</string>
+</resources>
