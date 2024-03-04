@@ -2,6 +2,7 @@ package com.example.chooserapp
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.media.Image
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
@@ -61,10 +62,11 @@ class MainActivity : AppCompatActivity() {
 
       // Проверка функцией запускается ли прила впервые, функция - в самом низу файла
         if (isFirstTimeLaunch(this)) {
-            val welcomeTag = "WelcomeScreenFragment"
+//            val welcomeTag = "WelcomeScreenFragment"
             // Show the welcome screen fragment
             supportFragmentManager.beginTransaction()
-                .replace(R.id.place_holder, WelcomeScreenFragment(), welcomeTag)
+                .replace(R.id.place_holder, WelcomeScreenFragment(), "WelcomeScreenFragment")
+                .addToBackStack("Welcome")
                 .commit()
         }
 
@@ -74,46 +76,12 @@ class MainActivity : AppCompatActivity() {
         val imageBackground : ImageView = findViewById(R.id.imageView2)
 
         val playButton : Button = findViewById(R.id.playButton)
-        playButton.setOnClickListener{
-            supportFragmentManager.beginTransaction()
-                .setCustomAnimations(
-                    R.anim.slide_in,
-                    R.anim.fade_out,
-                    R.anim.fade_in,
-                    R.anim.slide_out
-                )
-                .replace(R.id.place_holder, PlayFragment())
-                .addToBackStack(null)
-                .commit()
-        }
-
         val settingsButton : Button = findViewById(R.id.settingsButton)
-        settingsButton.setOnClickListener{
-            supportFragmentManager.beginTransaction()
-                .setCustomAnimations(
-                    R.anim.slide_in,
-                    R.anim.fade_out,
-                    R.anim.fade_in,
-                    R.anim.slide_out
-                )
-                .replace(R.id.place_holder, SettingsScreenFragment())
-                .addToBackStack(null)
-                .commit()
-        }
-
         val guideButton : Button = findViewById(R.id.guideButton)
-        guideButton.setOnClickListener{
-            supportFragmentManager.beginTransaction()
-                .setCustomAnimations(
-                    R.anim.slide_in,
-                    R.anim.fade_out,
-                    R.anim.fade_in,
-                    R.anim.slide_out
-                )
-                .replace(R.id.place_holder, GuideScreenFragment())
-                .addToBackStack(null)
-                .commit()
-        }
+        val spinfluence : TextView = findViewById(R.id.textView3)
+
+        //TODO: Спрятать еще новый бекграунд если он будет сильно выбиваться
+        val imageBackground : ImageView = findViewById(R.id.imageView2)
 
         // Функция которая прячет кнопки если фрагмент есть на экране(в стеке)
         fun updateButtonVisibility() {
@@ -133,12 +101,54 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        // Листенер бекстека, если бекстек 1+ то кнопки пропадают
+// Листенер бекстека, если бекстек 1+ то кнопки пропадают
         supportFragmentManager.addOnBackStackChangedListener {
             val backStackCount = supportFragmentManager.backStackEntryCount
             Log.d("BackStackChangeListener", "Backstack count is $backStackCount")
             updateButtonVisibility()
         }
+
+
+        playButton.setOnClickListener{
+            supportFragmentManager.beginTransaction()
+                .setCustomAnimations(
+                    R.anim.slide_in,
+                    R.anim.fade_out,
+                    R.anim.fade_in,
+                    R.anim.slide_out
+                )
+                .replace(R.id.place_holder, PlayFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+
+        settingsButton.setOnClickListener{
+            supportFragmentManager.beginTransaction()
+                .setCustomAnimations(
+                    R.anim.slide_in,
+                    R.anim.fade_out,
+                    R.anim.fade_in,
+                    R.anim.slide_out
+                )
+                .replace(R.id.place_holder, SettingsScreenFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        guideButton.setOnClickListener{
+            supportFragmentManager.beginTransaction()
+                .setCustomAnimations(
+                    R.anim.slide_in,
+                    R.anim.fade_out,
+                    R.anim.fade_in,
+                    R.anim.slide_out
+                )
+                .replace(R.id.place_holder, GuideScreenFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
 
     }
     override fun onDestroy() {
