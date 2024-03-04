@@ -6,6 +6,8 @@ import android.media.AudioManager
 
 class SoundManager(private val context: Context) {
 
+    //TODO: Не сохраняет состояние включения и выключения, если приложение полностью закрыть и зайти заново
+
     private val preferences: SharedPreferences = context.getSharedPreferences("sound_prefs", Context.MODE_PRIVATE)
     private val soundEnabledKey = "sound_enabled"
     private val musicEnabledKey = "music_enabled"

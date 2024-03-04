@@ -17,6 +17,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.replace
 import com.example.chooserapp.SoundManager
 
 
@@ -31,11 +32,33 @@ class MainActivity : AppCompatActivity() {
         bindingClass = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bindingClass.root)
 
+        val buttonText = resources.getString(R.string.settings_button_text)
+        val yourButton = findViewById<Button>(R.id.settingsButton) // Замените R.id.yourButton на фактический идентификатор вашей кнопки
+        yourButton.text = buttonText
+        yourButton.isSingleLine = false
+
         soundManager = SoundManager(this)
 
         mediaPlayer = MediaPlayer.create(this, R.raw.background_music)
         mediaPlayer.isLooping = true
         mediaPlayer.start()
+
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val isMusicEnabled = sharedPreferences.getBoolean("isMusicEnabled", true)
+        // Проверка состояния Music CheckBox при запуске активности
+        if (!isMusicEnabled) {
+            Log.d("CheckBox", "Music disabled on app launch")
+            soundManager.disableMusic()
+            if (mediaPlayer.isPlaying) {
+                mediaPlayer.pause()
+            }
+        }
+        val isSoundEnabled = sharedPreferences.getBoolean("isSoundEnabled", true)
+        if (!isSoundEnabled) {
+            Log.d("CheckBox", "Sound disabled on app launch")
+            soundManager.disableSound()
+        }
+
 
       // Проверка функцией запускается ли прила впервые, функция - в самом низу файла
         if (isFirstTimeLaunch(this)) {
@@ -46,6 +69,11 @@ class MainActivity : AppCompatActivity() {
                 .addToBackStack("Welcome")
                 .commit()
         }
+
+        val spinfluence : TextView = findViewById(R.id.textView3)
+
+        //TODO: Спрятать еще новый бекграунд если он будет сильно выбиваться
+        val imageBackground : ImageView = findViewById(R.id.imageView2)
 
         val playButton : Button = findViewById(R.id.playButton)
         val settingsButton : Button = findViewById(R.id.settingsButton)
@@ -81,7 +109,19 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        playButton.setOnClickListener{}
+        playButton.setOnClickListener{
+            supportFragmentManager.beginTransaction()
+                .setCustomAnimations(
+                    R.anim.slide_in,
+                    R.anim.fade_out,
+                    R.anim.fade_in,
+                    R.anim.slide_out
+                )
+                .replace(R.id.place_holder, PlayFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
 
         settingsButton.setOnClickListener{
             supportFragmentManager.beginTransaction()
@@ -108,6 +148,7 @@ class MainActivity : AppCompatActivity() {
                 .addToBackStack(null)
                 .commit()
         }
+
 
     }
     override fun onDestroy() {
