@@ -41,6 +41,7 @@ android {
 
 dependencies {
     implementation("me.relex:circleindicator:2.1.6")
+    implementation("com.airbnb.android:lottie:6.1.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
